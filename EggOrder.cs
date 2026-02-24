@@ -9,15 +9,20 @@ namespace Симулятор_простого_рестарана_1
 {
     internal class EggOrder
     {
-        private int Kolichestvo;
+        
         private int Kachestvo;
+        private static int Count = 0;
+        private int NomerObject;
+        private int Kolichestvo;
 
-        private Random random = new Random();
+        private static Random random = new Random();
 
-        public EggOrder(int kolichestvo)
+        public EggOrder(int kolichestvo, int? kachestvo = null)
         {
             Kolichestvo = kolichestvo;
-            Kachestvo = random.Next(1, 101);
+            Count++;
+            NomerObject = Count;
+            Kachestvo = kachestvo ?? random.Next(1,101);
         }
 
         public int GetQuantity()
@@ -27,13 +32,27 @@ namespace Симулятор_простого_рестарана_1
 
         public int? GetQuality()
         {
-            return (random.Next(2) == 0) ? (int?) null : Kachestvo;
+            if(NomerObject % 2 == 0)
+            {
+                return null;
+            }
+            return Kachestvo;
+      
+        }
+        public int GetQualiti()
+        {
+            return Kachestvo;
         }
 
         public void Crack()
         {
             int? a = GetQuality();
-            if(a.HasValue && a.Value < 25)
+
+            if(a == null)
+            {
+                throw new Exception("Kachestvo ne provereno!");
+            }
+            if(a < 25)
             {
                 throw new Exception("Яйцо испорченное");
             }

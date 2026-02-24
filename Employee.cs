@@ -26,6 +26,7 @@ namespace Симулятор_простого_рестарана_1
                 zakaz = MenuItem == "Chicken"? (object)new ChickenOrder(Quantity) : new EggOrder(Quantity);
             }
             PosledniZakaz = zakaz;
+            isPrepared = false;
             return zakaz;
         }
 
@@ -38,16 +39,13 @@ namespace Симулятор_простого_рестарана_1
             }
             if(PosledniZakaz is EggOrder egg)
             {
-                return new EggOrder(egg.GetQuantity());
+                return new EggOrder(egg.GetQuantity(), egg.GetQualiti());
             }
-            else if(PosledniZakaz is ChickenOrder chicken)
+            if(PosledniZakaz is ChickenOrder chicken)
             {
                 return new ChickenOrder(chicken.GetQuantity());
             }
-            else
-            {
-                throw new Exception("Neizvestniy zakaz");
-            }
+            throw new Exception("Neizvestniy zakaz");
         
         }
 
@@ -57,17 +55,26 @@ namespace Симулятор_простого_рестарана_1
             {
                 return "Chicken ne trebuet proverki";
             }
-            else if(order is EggOrder egg)
+            if(order is EggOrder egg)
             {
                 int? a = egg.GetQuality();
-                return a.HasValue ? $"Kachestvo яйцо: {a.Value}" : "Sotrudnic zabil proverit яйцо";
+                if (a == null)
+                {
+                    return "Sotrudnik zabil proverit egg";
+                }
+                return $"kachestvo egg: {a}";
             }
             return "Neizvestni zakaz";
 
         }
-
+        private bool isPrepared = false;
         public string PrepareFood(object order)
         {
+            if (isPrepared)
+            {
+                throw new Exception("Etot zakaz уже приготовлен!");
+            }
+
             if(order is ChickenOrder chicken)
             {
                 for(int i = 0; i<chicken.GetQuantity(); i++)
@@ -75,10 +82,12 @@ namespace Симулятор_простого_рестарана_1
                     chicken.CutUp();
                 }
                 chicken.Cook();
+                isPrepared = true;
                 return $"Podgotovleno {chicken.GetQuantity()} chicken.";
             }
-            else if(order is EggOrder egg)
+            if(order is EggOrder egg)
             {
+                int CountGnilieEgg = 0;
                 for(int i=0; i<egg.GetQuantity(); i++)
                 {
                     try
@@ -87,12 +96,13 @@ namespace Симулятор_простого_рестарана_1
                     }
                     catch
                     {
-
+                        CountGnilieEgg++;
                     }
                     egg.DiscardShell();
                 }
                 egg.Cook();
-                return $"Podgotovleno {egg.GetQuantity()} egg.";
+                isPrepared = true;
+                return $"Podgotovleno {egg.GetQuantity()} egg. Gnilie Egg {CountGnilieEgg}";
             }
             return "Neisvestni zakaz";
         }
