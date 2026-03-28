@@ -12,21 +12,20 @@ namespace Симулятор_простого_рестарана_1
         private object PosledniZakaz;
         private int ZaprosCount = 0;
 
-        public object NewRequest(string MenuItem, int Quantity)
+        public object NewRequest(string блюда, int Quantity)
         {
             ZaprosCount++;
             object zakaz;
 
             if(ZaprosCount % 3 == 0)
             {
-                zakaz = MenuItem == "Chicken"? (object)new EggOrder(Quantity) : new ChickenOrder(Quantity);
+                zakaz = блюда == "Chicken"? (object)new EggOrder(Quantity) : new ChickenOrder(Quantity);
             }
             else
             {
-                zakaz = MenuItem == "Chicken"? (object)new ChickenOrder(Quantity) : new EggOrder(Quantity);
+                zakaz = блюда == "Chicken"? (object)new ChickenOrder(Quantity) : new EggOrder(Quantity);
             }
             PosledniZakaz = zakaz;
-            isPrepared = false;
             return zakaz;
         }
 
