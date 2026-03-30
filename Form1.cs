@@ -36,17 +36,23 @@ namespace Симулятор_простого_рестарана_1
             try
             {
                 string menuItem = radioButton1.Checked ? "Chicken" : "Egg";
+                int kolichestvo = int.Parse(textBox1.Text);
 
-                int Kolichestvo = int.Parse(textBox1.Text);
+                currentOrder = employee.NewRequest(menuItem, kolichestvo);
 
-                currentOrder = employee.NewRequest(menuItem, Kolichestvo);
-                string ProveritResult = employee.Inspect(currentOrder);
+                string inspectResult = employee.Inspect(currentOrder);
 
-                textBox2.AppendText($"Noviy zapros: {menuItem}, Kolichestvo: {Kolichestvo}\r\n");
-                textBox2.AppendText($"Proverka: {ProveritResult} \r\n\r\n");
+                textBox2.AppendText($"Новый запрос: {menuItem}, Кол-во: {kolichestvo}\r\n");
+                textBox2.AppendText($"Инспекция: {inspectResult}\r\n\r\n");
 
-                label2.Text = ProveritResult.Contains("Kachestvo") ? ProveritResult : "Egg Kachestvo: -";
-
+                if (menuItem == "Egg")
+                {
+                    label2.Text = inspectResult; 
+                }
+                else
+                {
+                    label2.Text = "Chicken selected"; 
+                }
             }
             catch (Exception ex)
             {
@@ -58,15 +64,15 @@ namespace Симулятор_простого_рестарана_1
         {
             try
             {
+       
                 currentOrder = employee.CopyRequest();
-                string ProveritResult = employee.Inspect(currentOrder);
 
-                textBox2.AppendText("Copirovat predidushiy zakaz. \r\n");
+                string inspectResult = employee.Inspect(currentOrder);
 
-                textBox2.AppendText($"Proverka: {ProveritResult} \r\n\r\n");
+                textBox2.AppendText("Копия предыдущего заказа.\r\n");
+                textBox2.AppendText($"Инспекция копии: {inspectResult}\r\n\r\n");
 
-                label2.Text = ProveritResult.Contains("Kachestvo") ? ProveritResult : "Egg Kachestvo: -";
-
+                label2.Text = inspectResult;
             }
             catch (Exception ex)
             {
@@ -78,15 +84,18 @@ namespace Симулятор_простого_рестарана_1
         {
             try
             {
-               if(currentOrder != null)
-               {
-                    string result=employee.PrepareFood(currentOrder);
-
+                if (currentOrder != null)
+                {
+                    string result = employee.PrepareFood(currentOrder);
                     textBox2.AppendText(result + "\r\n\r\n");
-               }
+
+     
+                    currentOrder = null;
+                    label2.Text = "Egg Quality: -";
+                }
                 else
                 {
-                    textBox2.AppendText("Net zakaza dlya prigotovleniya! \r\n\r\n");
+                    textBox2.AppendText("Нет заказа для приготовления!\r\n\r\n");
                 }
             }
             catch (Exception ex)

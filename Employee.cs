@@ -66,13 +66,9 @@ namespace Симулятор_простого_рестарана_1
             return "Neizvestni zakaz";
 
         }
-        private bool isPrepared = false;
         public string PrepareFood(object order)
         {
-            if (isPrepared)
-            {
-                throw new Exception("Etot zakaz уже приготовлен!");
-            }
+           
 
             if(order is ChickenOrder chicken)
             {
@@ -81,7 +77,6 @@ namespace Симулятор_простого_рестарана_1
                     chicken.CutUp();
                 }
                 chicken.Cook();
-                isPrepared = true;
                 return $"Podgotovleno {chicken.GetQuantity()} chicken.";
             }
             if(order is EggOrder egg)
@@ -100,7 +95,6 @@ namespace Симулятор_простого_рестарана_1
                     egg.DiscardShell();
                 }
                 egg.Cook();
-                isPrepared = true;
                 return $"Podgotovleno {egg.GetQuantity()} egg. Gnilie Egg {CountGnilieEgg}";
             }
             return "Neisvestni zakaz";
